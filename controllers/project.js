@@ -8,9 +8,9 @@ var controller={
     });
   },
 
-  test:function(){
+  test:function(req,res){
     res.status(200).send({
-        message:"hola mundo desde api node js"
+        message:"soy el metodo test del controlador"
     });
   }
 

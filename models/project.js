@@ -16,4 +16,4 @@ var projectSchema=Schema({
 primer parametro es el nombre de la collecion donde guardar lo hace minusculas y lo pluraliza
 segundo paraetro es el modelo a usar
 */
-module.exports | mongoose.model('Projects',projectSchema);
+module.exports | mongoose.model('Project',projectSchema);
