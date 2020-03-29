@@ -35,11 +35,25 @@ var controller={
       if(!projectStore)return res.status(404).send({message:"no se pudo guardar el proyecto"});
       return res.status(200).send({project:projectStore});
     });
-
     /*return  res.status(200).send({
       project:project,
       message:"proyecto Guardado"
     });*/
+  },
+
+  getProject:function(req,res){
+    var projectId=req.params.id;
+
+    if(projectId==null){
+      return res.status(404).send({message:"no se recibio el Id"});
+    }
+    /*buscar un objeto*/
+    Project.findById(projectId,(err,project)=>{
+
+        if(err) return res.status(500).send({message:"error al obtener valor"});
+        if(!project) return res.status(404).send({message:"El Documento no existe"});
+        return res.status(200).send({project});
+    });
   }
 
 
