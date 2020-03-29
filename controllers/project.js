@@ -54,7 +54,20 @@ var controller={
         if(!project) return res.status(404).send({message:"El Documento no existe"});
         return res.status(200).send({project});
     });
-  }
+  },
+
+
+  getProjects:function(req,res){
+    /*puedes buscar por cualquier parametro ejemplo Project.find({year:2019}) */
+    Project.find({}).exec((err,projects)=>{
+      if(err) return res.status(500).send({message:"No se Encontraron Resultados"});
+      if(!projects) return res.status(404).send({message:"No Hay Proyectos"});
+      return res.status(200).send({projects});
+    });
+  },
+
+
+
 
 
 };
