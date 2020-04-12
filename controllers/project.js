@@ -1,6 +1,7 @@
 'use strict'
 
 var Project=require('../models/project');//Importar el Modelo
+var fs = require('fs');
 
 
 var controller={
@@ -68,6 +69,89 @@ var controller={
   },
 
 
+  updateProject:function(req,res){
+    //actualizar proyecto
+    var projectId=req.params.id;
+    var update=req.body;/*obtener todo el objeto completo*/
+    /*buscar un objeto*/
+    Project.findByIdAndUpdate(projectId,update,{new:true},(err,projectUpdated )=>{
+      if(err) return res.status(500).send({message:"Error al Actualizar"});
+      if(!projectUpdated) return res.status(404).send({message:"No Existe el Proyecto para Actualizar"});
+      return res.status(200).send({
+        project:projectUpdated
+      });
+    });
+  },
+
+
+  deleteProject:function(req,res){
+    //eliminar proyecto
+    var projectId=req.params.id;
+
+    /*buscar un objeto*/
+    Project.findByIdAndRemove(projectId,(err,projectRemove )=>{
+      if(err) return res.status(500).send({message:"Error al Borrar Proyecto"});
+      if(!projectRemove) return res.status(404).send({message:"No Existe el Proyecto para Actualizar"});
+      return res.status(200).send({
+        project:projectRemove
+      });
+    });
+  },
+
+  /*Subir Imagen*/
+  uploadImage: function(req, res){
+		var projectId = req.params.id;
+		var fileName = 'Imagen no subida...';
+
+		if(req.files){
+			var filePath = req.files.image.path;
+			var fileSplit = filePath.split('\\');
+			var fileName = fileSplit[1];
+			var extSplit = fileName.split('\.');
+			var fileExt = extSplit[1];
+
+			if(fileExt == 'png' || fileExt == 'jpg' || fileExt == 'jpeg' || fileExt == 'gif'){
+
+				Project.findByIdAndUpdate(projectId, {image: fileName}, {new: true}, (err, projectUpdated) => {
+					if(err) return res.status(500).send({message: 'La imagen no se ha subido'});
+
+					if(!projectUpdated) return res.status(404).send({message: 'El proyecto no existe y no se ha asignado la imagen'});
+
+					return res.status(200).send({
+						project: projectUpdated
+					});
+				});
+
+			}else{
+				fs.unlink(filePath, (err) => {
+					return res.status(200).send({message: 'La extensión no es válida'});
+				});
+			}
+
+		}else{
+			return res.status(200).send({
+				message: fileName
+			});
+		}
+
+	},
+
+
+  /*Obtener Imagen*/
+  /*getImageFile: function(req, res){
+		var file = req.params.image;
+		var path_file = './uploads/'+file;
+
+		fs.exists(path_file, (exists) => {
+			if(exists){
+				return res.sendFile(path.resolve(path_file));
+			}else{
+				return res.status(200).send({
+					message: "No existe la imagen..."
+				});
+			}
+		});
+	}*/
 
 
 
